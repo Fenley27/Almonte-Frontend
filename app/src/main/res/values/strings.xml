@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Hellojbhbjbjj</string>
+    <string name = "URL_OBTENER_USERS">https://jsonplaceholder.typicode.com/users</string>
+</resources>
