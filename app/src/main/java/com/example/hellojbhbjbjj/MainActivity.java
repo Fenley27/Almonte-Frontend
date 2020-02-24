@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             register.put("phone", serverList.get(i).getPhone());
             register.put("website", serverList.get(i).getWebsite());
 
-            db.insert("User", null, register);
+            db.insert("Users", null, register);
         }
         db.close();
         getLocal();
