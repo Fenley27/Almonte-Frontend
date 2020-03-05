@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hellojbhbjbjj.Activities.RutinaActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,90 +42,121 @@ public class MainActivity extends AppCompatActivity {
     Button btnSync, btnAdd;
     EditText etName, etUsername, etEmail, etPhone, etWebsite;
     RecyclerView rvServer, rvLocal;
-    List<Users> serverList = new ArrayList<>();
-    List<Users> localList = new ArrayList<>();
+
+
+    List<Plans> planList = new ArrayList<>();
 
     ServerAdapter serverAdapter;
     LocalAdapter localAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+
 
         btnSync = findViewById(R.id.btnSync);
         btnAdd = findViewById(R.id.btnAdd);
 
-        //Edit Text
 
-      //  getServer();
-
-
-        etName = findViewById(R.id.etName);
-        etEmail = findViewById(R.id.etEmail);
-        etUsername = findViewById(R.id.etUsername);
-        etPhone = findViewById(R.id.etPhone);
-        etWebsite = findViewById(R.id.etWebsite);
-
-        // RecyclerView
-
-        rvLocal = findViewById(R.id.rvLocal);
-        rvLocal.setLayoutManager(new GridLayoutManager(this, 1));
-        rvServer = findViewById(R.id.rvServer);
-        rvServer.setLayoutManager(new GridLayoutManager(this, 1));
 
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLocal();
+                Intent routinas = new Intent(MainActivity.this, RutinaActivity.class);
+                startActivity(routinas);
             }
         });
 
-        getLocal();
-        getServer();
-    }
 
-    public void getServer() {
-        serverList.clear();
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        StringRequest stringRequest;
-        stringRequest = new StringRequest(Request.Method.GET, getResources().getString(R.string.URL_OBTENER_USERS),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                serverList.add(
-                                        new Users(
-                                                jsonArray.getJSONObject(i).getString("name"),
-                                                jsonArray.getJSONObject(i).getString("username"),
-                                                jsonArray.getJSONObject(i).getString("email"),
-                                                jsonArray.getJSONObject(i).getString("phone"),
-                                                jsonArray.getJSONObject(i).getString("website")
-                                        )
-                                );
-                            }
-                            serverAdapter = new ServerAdapter(MainActivity.this, serverList);
-                            rvServer.setAdapter(serverAdapter);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onClick(View v) {
+                backupPlanTable();
             }
         });
 
 
-        requestQueue.add(stringRequest);
     }
 
+    //Fill the plan's table if is empty
+
+    public void backupPlanTable(){
+        planList.clear();
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(MainActivity.this, "dbSystem", null, 1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        Cursor fila = db.rawQuery("select * from Plans", null);
+
+        if(fila.getCount() == 0){
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+            StringRequest stringRequest;
+            stringRequest = new StringRequest(Request.Method.GET, getResources().getString(R.string.URL_GET_PLANS),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONArray  jsonResponse = new JSONArray(response);
+                                for (int i = 0; i < jsonResponse.length(); i++) {
+                                    JSONObject jsonObjectResponse = jsonResponse.getJSONObject(i);
+                                    planList.add(
+                                            new Plans(
+                                                    jsonObjectResponse.getString("_id"),
+                                                    jsonObjectResponse.getString("name"),
+                                                    jsonObjectResponse.getString("cuotas"),
+                                                    jsonObjectResponse.getString("percentaje"),
+                                                    jsonObjectResponse.getString("fecha")
+                                            )
+                                    );
+                                }
+                                Toast.makeText(MainActivity.this, "l"+planList.size(), Toast.LENGTH_SHORT).show();
+                                setLocal();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            requestQueue.add(stringRequest);
+        }else{
+            Toast.makeText(MainActivity.this, "Bienvenido !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void setLocal() {
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(MainActivity.this, "dbSystem", null, 1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        if(planList.size() > 0 ){
+            for (int i = 0; i < planList.size(); i++) {
+
+                ContentValues register = new ContentValues();
+                register.put("id", planList.get(i).get_id());
+                register.put("name", planList.get(i).getName());
+                register.put("numberCuotes", planList.get(i).getCuotas());
+                register.put("rateOfInterest", planList.get(i).getPercentaje());
+                register.put("date", planList.get(i).getFecha());
+
+                db.insert("Plans", null, register);
+            }
+
+            db.close();
+        }else {
+            Toast.makeText(MainActivity.this, "No hay planes predefinidas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Por favor crea por lo menos una", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "para poder crear prestamos", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+
+/*
     // Fill the database with an API
     public void setLocal() {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(MainActivity.this, "dbSystem", null, 1);
@@ -146,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     // Print the database information
     public void getLocal() {
         localList.clear();
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(MainActivity.this, "dbSystem", null, 1);
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(MainActivity.this, "dbSystem", null, 3);
         SQLiteDatabase db = admin.getWritableDatabase();
 
         Cursor fila = db.rawQuery("select * from Users", null);
@@ -175,7 +208,8 @@ public class MainActivity extends AppCompatActivity {
         }
         db.close();
     }
-}
+
+ */
 
     /*
     //Send data to server

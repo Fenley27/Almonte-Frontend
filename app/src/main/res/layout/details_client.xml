@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="#43C2BBBB"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/uno1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/nombre_cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Yves Gervens,"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/apellido_cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="5dp"
+            android:text="Constant"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/uno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@+id/uno1"
+
+
+        <TextView
+            android:id="@+id/cedula_cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="5dp"
+            android:text="CY-6623672"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
+
+        <TextView
+            android:id="@+id/telefono_cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="5dp"
+            android:text="809-884-0841"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        tools:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/ubicacion_cliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="5dp"
+            android:text="Villa Olimpica, Manzana A, Edificio 7, Apt 3B"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/monto_deuda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="$Rd 1000"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textColor="#CA0F0F"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="5dp"
+            android:text="Pagago"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
+
+</LinearLayout>
+
+</LinearLayout>
